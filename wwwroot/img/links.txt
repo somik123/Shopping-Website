@@ -1,0 +1,17 @@
+paypal 
+https://sm.pcmag.com/pcmag_ap/review/p/paypal/paypal_g2tp.png
+
+numeric
+https://christoph.ruegg.name/images/linear-regression/regression.png
+
+logging
+https://coralogix.com/wp-content/uploads/2020/09/Dot-Net-Best-Practices.png
+
+analytics
+https://optinmonster.com/wp-content/uploads/2019/07/google-analytics-wordpress-2.png
+
+ml
+https://i.ytimg.com/vi/x-XPfTA8Glk/maxresdefault.jpg
+
+chart
+https://canvasjs.com/wp-content/uploads/images/gallery/javascript-charts/overview/javascript-charts-graphs-index-data-label.png

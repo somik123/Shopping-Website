@@ -1,0 +1,136 @@
+@{
+    Product currentProduct = ViewBag.myProducts;
+    List<Comment> comments = ViewBag.comments;
+    List<Comment> myComments = new List<Comment>();
+    double rate = ViewBag.rate;
+    ViewData["Title"] = currentProduct.Name;
+}
+
+@section Scripts
+{
+    <script src="~/js/load_search.js"></script>
+}
+
+<link href="/css/star-rating.css" rel="stylesheet" />
+<script src="/js/star-rating.js"></script>
+
+
+<div class="drop-shadow row pt-3 pb-3">
+    <div class="col">
+        <img class="card-img-top" src="/img/@currentProduct.ImagePath" alt="Card image cap">
+    </div>
+    <div class="col">
+        <h5 class="card-title product-name">@currentProduct.Name</h5>
+        <p class="card-text product-desc">
+            @currentProduct.Desc<br /><br />
+            <span class="font-weight-bold">Price:</span> @currentProduct.Price
+        </p>
+        <button class="btn btn-primary" onclick="AddRemoveFromCart('@currentProduct.Id.ToString()','add');">Add to Cart</button>
+        <input type="hidden" class="product-price" value="@currentProduct.Price" />
+    </div>
+</div>
+@{
+    if (rate != 0)
+    {
+    <div class="drop-shadow border border-grey p-3 mt-3 mb-3">
+        Rating:
+        <select class="star-rating" disabled="disabled">
+            @if (rate == 5)
+            {
+                <option value="5" selected>Excellent</option>
+            }
+            else
+            {
+                <option value="5">Excellent</option>
+            }
+            @if (rate == 4)
+            {
+                <option value="4" selected>Very Good</option>
+            }
+            else
+            {
+                <option value="4">Very Good</option>
+            }
+            @if (rate == 3)
+            {
+                <option value="3" selected>Average</option>
+            }
+            else
+            {
+                <option value="3">Average</option>
+            }
+            @if (rate == 2)
+            {
+                <option value="2" selected>Poor</option>
+            }
+            else
+            {
+                <option value="2">Poor</option>
+            }
+            @if (rate == 1)
+            {
+                <option value="1" selected>Terrible</option>
+            }
+            else
+            {
+                <option value="1">Terrible</option>
+            }
+        </select>
+    </div>
+    }
+    else
+    {
+        <div class="drop-shadow border border-grey p-3 mt-3 mb-3">
+            <div class="card-body">
+                No rating yet
+                <select class="star-rating" disabled="disabled">
+                    <option value="">Select a rating</option>
+                    <option value="5">Excellent</option>
+                    <option value="4">Very Good</option>
+                    <option value="3">Average</option>
+                    <option value="2">Poor</option>
+                    <option value="1">Terrible</option>
+                </select>
+            </div>
+        </div>
+    }
+}
+@{
+    if (comments.Count > 0)
+    {
+        foreach (Comment comment in comments)
+        {
+            if (comment.Product.Equals(currentProduct))
+            {
+                myComments.Add(comment);
+            }
+        }
+
+        <div class="drop-shadow border border-grey p-3 mt-3 mb-3">
+            @{
+                if (myComments.Count != 0)
+                {
+                    <h5>User Feedbacks:</h5>
+                }
+                @foreach (Comment productComment in myComments)
+                {
+                    <div class="text-left m-1">
+                        <span class="font-weight-bold">@productComment.User.UserName:</span>
+                        @productComment.CommentString
+                    </div>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <div class="drop-shadow border border-grey p-3 mt-3 mb-3">
+            <div class="card-body">
+                No reviews yet
+            </div>
+        </div>
+    }
+
+
+}
+<script>var stars = new StarRating('.star-rating');</script>

@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+    float totalPrice = ViewBag.totalPrice;
+    bool cartEmpty = ViewBag.cartEmpty;
+    string paypal_json = ViewBag.paypal_json;
+}
+
+@section Scripts
+{
+<script src="https://www.paypal.com/sdk/js?client-id=Abrl7BVOB2lyx84JImhu80qyKAxy-k7BQMChsKQOzsM4-UBMRaxCcBhhpNizsz5IBbYwutDCbACvu9Bx&currency=SGD"></script>
+}
+
+@{
+    if (cartEmpty)
+    {
+        <div class="text-center">
+            <h3>No items in shopping cart</h3>
+            <h4><a href="/Shop">Continue Shopping</a></h4>
+        </div>
+    }
+    else
+    {
+
+        <!-- Set up a container element for the button -->
+        <div class="text-center paypalStyling" id="paypal-button-container"></div>
+
+        <table class="table paypalTable">
+            <tr>
+                <td colspan="2">Paypal Payment Account for testing:</td>
+            </tr>
+            <tr>
+                <td>Email ID:</td>
+                <td>sb-o3ce4315104982@personal.example.com</td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td>gKot0!?s</td>
+            </tr>
+        </table>
+
+
+        <table class="table paypalTable">
+            <tr>
+                <td colspan="2">Credit card for testing:</td>
+            </tr>
+            <tr>
+                <td>Card Type:</td>
+                <td>Visa</td>
+            </tr>
+            <tr>
+                <td>Card Number:</td>
+                <td>4032 0340 8431 3389</td>
+            </tr>
+            <tr>
+                <td>Expiration Date:</td>
+                <td>02 / 2023</td>
+            </tr>
+            <tr>
+                <td>CVV:</td>
+                <td>510</td>
+            </tr>
+        </table>
+
+    }
+}
+
+
+
+
+
+<script>
+    window.onload = function() {
+        paypal.Buttons({
+
+
+            // Sets up the transaction when a payment button is clicked
+            /*
+            createOrder: (data, actions) => {
+              return actions.order.create({
+                purchase_units: [{
+                  amount: {
+                    "currency_code": "SGD",
+                    value: '@totalPrice' // Can also reference a variable or function
+                  }
+                }]
+              });
+            },
+            */
+
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    "purchase_units": [{
+                        "amount": {
+                            "currency_code": "SGD",
+                            "value": "@totalPrice",
+                            "breakdown": {
+                                "item_total": { /* Required when including the `items` array */
+                                    "currency_code": "SGD",
+                                    "value": "@totalPrice"
+                                }
+                            }
+                        },
+                        "items": @Html.Raw(paypal_json)
+                    }]
+                });
+            },
+
+
+            // Finalize the transaction after payer approval
+            onApprove: (data, actions) => {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For dev/demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                    document.getElementById("paypal-button-container").innerHTML = '<h3>Thank you for your payment! Verifying...</h3>';
+
+                    const transaction = orderData.purchase_units[0].payments.captures[0];
+                    ProcessPayment_API(JSON.stringify(orderData, null, 2), transaction.id);
+
+                    //alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                    // Or go to another URL:
+                    //actions.redirect('http://localhost:23640/User');
+                });
+            }
+        }).render('#paypal-button-container');
+    };
+</script>
+
+
+

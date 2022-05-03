@@ -1,0 +1,79 @@
+﻿@{
+    if (Context.Request.Cookies["FullName"] != null)
+    {
+        ViewData["FullUserName"] = Context.Request.Cookies["FullName"];
+        ViewData["login_out"] = "Logout";
+    }
+    else
+    {
+        ViewData["FullUserName"] = "Guest";
+        ViewData["login_out"] = "Login";
+    }
+    if (ViewBag.Cart != null)
+    {
+        ViewData["Shop"] = "Continue Shopping";
+    }
+    else
+    {
+        ViewData["Shop"] = "Shop";
+    }
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SA54_Team1</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand font-weight-bold" asp-area="" asp-controller="Shop" asp-action="Index">SA54_Team1</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                         <li class="nav-item">
+                            <span class="nav-link text-primary">Hello, <a class="font-weight-bold" asp-area="" asp-controller="User" asp-action="ChangePassword">@ViewData["FullUserName"]</a> </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Shop" asp-action="Index">@ViewData["Shop"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Shop" asp-action="Payment">Checkout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">My Purchases</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="@ViewData["login_out"]">@ViewData["login_out"]</a>
+                        </li>
+                    </ul>
+                    @Html.Raw(ViewData["ShopButton"])
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - SA54_Team1
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

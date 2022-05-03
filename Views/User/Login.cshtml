@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    string error_txt = ViewBag.error_txt;
+}
+
+@{
+    if (error_txt != null && error_txt.Length > 0)
+    {
+        <div class="alert alert-danger" role="alert">@error_txt</div>
+    }
+}
+
+@section Scripts
+{
+<script src="~/js/SHA256.js"></script>
+}
+
+<div class="loginOverall">
+    <form method="post" action="/User/Authenticate" onsubmit="return SubmitValidate();">
+        <input type="hidden" name="password_hash" value="" id="password-hash" />
+        <input type="hidden" name="redirect" value="" />
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" name="username" id="username"
+                   placeholder="Enter username" onchange="FormValidate('username',5);">
+            <div class="invalid-feedback" id="invalid-username">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password"
+                   placeholder="Password" onchange="EncryptPassword('password')">
+            <div class="invalid-feedback" id="invalid-password">
+                Please choose a username.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+
+<table class="table loginOverall">
+    <tr>
+        <td colspan="2">Login Account for testing:</td>
+    </tr>
+    <tr>
+        <td>Username:</td>
+        <td>somik</td>
+    </tr>
+    <tr>
+        <td>Password:</td>
+        <td>mypassword</td>
+    </tr>
+</table>

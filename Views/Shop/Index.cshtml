@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Browse Products";
+    List<Product> myProductList = ViewBag.myProducts;
+    List<Product> recommentProducts = ViewBag.recommendProducts;
+    string search_txt = ViewBag.search_txt;
+    int min_price = ViewBag.min_price;
+    int max_price = ViewBag.max_price;
+}
+@section Scripts
+{
+<script src="~/js/load_search.js"></script>
+}
+
+
+<div class="card">
+
+    <div class="card-header">
+        <form class="form">
+            <!-- Actual search box -->
+            <div class="form-row">
+                <div class="form-group col-md-7">
+                    <label>Product Search:</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" placeholder="Search" name="search_txt"
+                               id="search_txt" aria-label="Search" value="@search_txt" onkeyup="SearchProductJS();">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>Price Range:</label>
+
+                    <div class="input-group mb-2">
+                        <select class="form-control" name="min_price" id="min_price" onchange="SearchProductJS();">
+
+                            @{
+                                if (min_price == 0)
+                                {
+                                    <option value="0" selected>Min</option>
+                                }
+                                else
+                                {
+                                    <option value="0">Min</option>
+                                }
+                                for (int i = 1; i <= 10; i++)
+                                {
+                                    int range = i * 50;
+                                    if (min_price > 0 && min_price == range)
+                                    {
+                                        <option selected value="@range">@range</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@range">@range</option>
+                                    }
+                                }
+                            }
+                        </select>
+
+                        <span class="input-group-text" id="basic-addon1"> To </span>
+
+                        <select class="form-control" name="max_price" id="max_price" onchange="SearchProductJS();">
+                            @{
+                                for (int i = 1; i < 10; i++)
+                                {
+                                    int range = i * 50;
+                                    if (max_price > 0 && max_price == range)
+                                    {
+                                        <option selected value="@range">@range</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@range">@range</option>
+                                    }
+                                }
+                                if (max_price == 500)
+                                {
+                                    <option value="500" selected>Max</option>
+                                }
+                                else
+                                {
+                                    <option value="500">Max</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="card-columns m-3">
+        @{
+            foreach (Product myProduct in myProductList)
+            {
+                <div class="card text-center mb-3">
+                    <img class="card-img-top" src="/img/@myProduct.ImagePath" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title product-name">@myProduct.Name</h5>
+                        <p class="card-text product-desc">@myProduct.Desc</p>
+
+                        <button class="btn btn-primary" onclick="AddRemoveFromCart('@myProduct.Id.ToString()','add');">$@myProduct.Price - Add to Cart</button>
+                        <input type="button" class="btn btn-primary" value="Detail" onclick="location.href='@Url.Action("ViewDetail", "Shop",new {Id = @myProduct.Id.ToString()})'" />
+                        <input type="hidden" class="product-price" value="@myProduct.Price" />
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+
+</div>
+
+
+<br />
+<h5 class="recomHeader">Recommended Products</h5>
+
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="cards-wrapper">
+
+                <div class="card text-center mb-3">
+                    <img class="card-img-top" src="/img/Hotdeal.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">CHEAP PRICE BEST QUALITY!!!</h5>
+                        <p class="card-text">All the Products are under $50</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @{
+            foreach (Product myProduct in recommentProducts)
+            {
+                <div class="carousel-item">
+                    <div class="cards-wrapper">
+                        <div class="card text-center mb-3">
+                            <img class="card-img-top" src="/img/@myProduct.ImagePath" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@myProduct.Name</h5>
+                                <p class="card-text">@myProduct.Desc</p>
+                                <button class="btn btn-primary" onclick="AddRemoveFromCart('@myProduct.Id.ToString()','add');">$@myProduct.Price - Add to Cart</button>
+                                <input type="button" class="btn btn-primary" value="Detail" onclick="location.href='@Url.Action("ViewDetail", "Shop",new {Id = @myProduct.Id.ToString()})'" />
+                                <input type="hidden" class="product-price" value="@myProduct.Price" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>

@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Cart";
+    ShoppingCart myCart = ViewBag.Cart;
+}
+
+@{
+    if (myCart == null || myCart.CartItems==null || myCart.CartItems.Count() ==0 )
+    {
+        <div class="text-center">
+            <h3>No items in shopping cart</h3>
+            <h4><a href="/Shop">Continue Shopping</a></h4>
+        </div>
+    }
+    else
+    {
+        <div class="row rowOverall">
+            @foreach (CartItem myItem in myCart.CartItems)
+            {
+                <div class="col col-md-4">
+                    <div class="card border-primary mb-3 centerText">
+                        <img class="card-img-top" src="/img/@myItem.Product.ImagePath" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@myItem.Product.Name</h5>
+                            <p class="card-text">@myItem.Product.Desc</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-8 mt-5">
+                    <span class="font-weight-bold">Price:</span>
+                    <span>$ @myItem.Product.Price</span>
+                    <br />
+                    <br />
+
+                    <span class="font-weight-bold">Quantity:</span>
+                    <span id="quantity_@myItem.Product.Id.ToString()">@myItem.Quantity</span>
+                    <br />
+                    <br />
+
+                    <button class="btn btn-sm btn-outline-info font-weight-bold" 
+                    onclick="AddRemoveFromCart('@myItem.Product.Id.ToString()','add');">+</button>
+                    <button class="btn btn-sm btn-outline-info font-weight-bold" 
+                    onclick="AddRemoveFromCart('@myItem.Product.Id.ToString()','rem');">-</button>
+                    <button class="btn btn-sm btn-outline-info font-weight-bold" 
+                    onclick="AddRemoveFromCart('@myItem.Product.Id.ToString()','del');">x</button>
+                </div>
+                <br />
+            }
+        </div>
+        
+        <br />
+        <br />
+
+        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="location.href='/Shop/Payment'">Proceed to Payment</button>
+    }
+}
